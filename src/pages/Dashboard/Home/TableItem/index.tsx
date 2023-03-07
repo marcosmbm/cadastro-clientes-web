@@ -1,69 +1,57 @@
-import React from 'react'; 
+import React from 'react';
 
-import {Table, Thead, Tr, Th, Tbody, Td, Avatar, Button} from '@chakra-ui/react';
+import { Table, Thead, Tr, Th, Tbody, Td, Avatar, Button, Box, Alert, AlertIcon, AlertTitle } from '@chakra-ui/react';
 
-export default function TableItem() {
-  return (
-   <Table>
-     <Thead>
-        <Tr>
-            <Th>Avatar</Th>
-            <Th width={"90%"}>Nome</Th>
-            <Th textAlign={"end"}>Ação</Th>
-        </Tr>
-     </Thead>
+import { Client } from '..';
 
-     <Tbody>
-        <Tr>
-            <Td><Avatar bgColor={"green"}/></Td>
-            <Td>Marcos Barbosa Miranda dos Santos</Td>
-            <Td textAlign={"end"}>
-                <Button type='button' variant={'outline'} colorScheme="green">
-                    Editar
-                </Button>
-            </Td>
-        </Tr>
+export interface TableItemProps {
+    clients: Client[];
+    onEditing: (client: Client) => void;
+}
 
-        <Tr>
-            <Td><Avatar bgColor={"green"}/></Td>
-            <Td>Marcos Barbosa Miranda dos Santos</Td>
-            <Td textAlign={"end"}>
-                <Button type='button' variant={'outline'} colorScheme="green">
-                    Editar
-                </Button>
-            </Td>
-        </Tr>
+export default function TableItem({ clients, onEditing }: TableItemProps) {
+    return (
+        <Box
+            backgroundColor={"whiteAlpha.900"}
+            boxShadow="md"
+            borderRadius={"md"}
+            p={"1rem"}
+        >
+            {
+                clients.length === 0 ?
+                    <Alert status='info'>
+                        <AlertIcon />
+                        <AlertTitle>Não existem itens para exibir</AlertTitle>
+                    </Alert>
+                    :
+                    <Table>
+                        <Thead>
+                            <Tr>
+                                <Th>Avatar</Th>
+                                <Th width={"90%"}>Nome</Th>
+                                <Th textAlign={"end"}>Ação</Th>
+                            </Tr>
+                        </Thead>
 
-        <Tr>
-            <Td><Avatar bgColor={"green"}/></Td>
-            <Td>Marcos Barbosa Miranda dos Santos</Td>
-            <Td textAlign={"end"}>
-                <Button type='button' variant={'outline'} colorScheme="green">
-                    Editar
-                </Button>
-            </Td>
-        </Tr>
-
-        <Tr>
-            <Td><Avatar bgColor={"green"}/></Td>
-            <Td>Marcos Barbosa Miranda dos Santos</Td>
-            <Td textAlign={"end"}>
-                <Button type='button' variant={'outline'} colorScheme="green">
-                    Editar
-                </Button>
-            </Td>
-        </Tr>
-
-        <Tr>
-            <Td><Avatar bgColor={"green"}/></Td>
-            <Td>Marcos Barbosa Miranda dos Santos</Td>
-            <Td textAlign={"end"}>
-                <Button type='button' variant={'outline'} colorScheme="green">
-                    Editar
-                </Button>
-            </Td>
-        </Tr>
-     </Tbody>
-   </Table>
-  );
+                        <Tbody>
+                            {
+                                clients.map((item) => {
+                                    return (
+                                        <Tr key={item.id}>
+                                            <Td><Avatar bgColor={"green"} /></Td>
+                                            <Td>{item.name}</Td>
+                                            <Td textAlign={"end"}>
+                                                <Button type='button' variant={'outline'} colorScheme="green" onClick={() => onEditing(item)}>
+                                                    Editar
+                                                </Button>
+                                            </Td>
+                                        </Tr>
+                                    )
+                                })
+                            }
+                        </Tbody>
+                    </Table>
+            }
+        </Box>
+    );
 }
