@@ -71,7 +71,7 @@ export default function Home() {
 
     onOpen();
   }
-
+  
   return (
     <Flex
       flexDirection={'column'}
@@ -80,7 +80,7 @@ export default function Home() {
       backgroundColor={"gray.200"}
       gap={15}
     >
-      <Header />
+      <Header/>
 
       <Container maxW={"container.lg"}>
         <Stack>

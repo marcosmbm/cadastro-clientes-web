@@ -1,11 +1,28 @@
 import React from 'react'; 
+import {useNavigate} from 'react-router-dom';
+import {useForm} from 'react-hook-form';
 
 import {EmailIcon, LockIcon} from '@chakra-ui/icons';
 import {Flex, Stack, Image, Heading, Box, FormControl, InputGroup, InputLeftElement, Input, FormHelperText, Link, Button} from '@chakra-ui/react';
 
 import logo from '../../../assets/logo.png';
+import RouterLink from '../../../components/RouterLink';
+
 
 export default function SignIn() {
+
+  const navigate = useNavigate();
+  const {register, handleSubmit} = useForm();
+
+  function handleLogin(){
+    // verificar se os dados de email e senha foram digitados
+    // requisição para o backend
+    // em caso de sucesso, ir para a rota home
+    
+    localStorage.setItem('@cadastro_clientes', 'teste')
+    navigate('/dashboard', {replace: true});
+  }
+
   return (
    <Flex
       flexDirection={'column'}
@@ -35,7 +52,7 @@ export default function SignIn() {
         <Box
           minW={{base: '90%', md: '470'}}
         >
-          <form>
+          <form onSubmit={handleSubmit(handleLogin)}>
             <Stack
               spacing={4}
               p="1rem"
@@ -53,6 +70,7 @@ export default function SignIn() {
                         <Input
                           type={"email"}
                           placeholder="Endereço de email"
+                          {...register('email')}
                         />
                     </InputGroup>
                 </FormControl>
@@ -67,6 +85,7 @@ export default function SignIn() {
                         <Input
                           type={"password"}
                           placeholder="********"
+                          {...register('password')}
                         />
                     </InputGroup>
 
@@ -84,7 +103,7 @@ export default function SignIn() {
      </Stack>
 
      <Box>
-        Ainda não possui cadastro? <Link color={"green"}>Cadastre-se</Link>
+        Ainda não possui cadastro? <RouterLink to='/register'>Cadastre-se</RouterLink>
      </Box>
    </Flex>
   );

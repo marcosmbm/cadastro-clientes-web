@@ -4,6 +4,7 @@ import {AtSignIcon, EmailIcon, LockIcon} from '@chakra-ui/icons';
 import {Flex, Stack, Image, Heading, Box, FormControl, InputGroup, InputLeftElement, Input, Button} from '@chakra-ui/react';
 
 import logo from '../../../assets/logo.png';
+import RouterLink from '../../../components/RouterLink';
 
 export default function SignUp() {
   return (
@@ -105,7 +106,7 @@ export default function SignUp() {
                 </Button>
 
                 <Button type={"button"} variant="link" colorScheme="green">
-                    Voltar
+                   <RouterLink to='/'>Voltar</RouterLink>
                 </Button>
             </Stack>
           </form>
