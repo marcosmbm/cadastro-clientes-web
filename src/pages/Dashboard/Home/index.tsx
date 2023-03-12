@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useForm} from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Flex,
@@ -17,12 +18,17 @@ import {
   useDisclosure,
   InputGroup,
   InputLeftElement,
+  Text
 } from '@chakra-ui/react';
+import { AtSignIcon, EmailIcon, PhoneIcon } from '@chakra-ui/icons';
 
 import Header from '../../../components/Header';
 import SearchBar from '../../../components/SearchBar';
 import TableItem from './TableItem';
-import { AtSignIcon, EmailIcon, PhoneIcon } from '@chakra-ui/icons';
+import Alerts from '../../../components/Alerts';
+
+import { AlertStatus } from '@chakra-ui/react';
+
 
 export type Client = {
   id: number;
@@ -35,9 +41,49 @@ export default function Home() {
 
   const {register, handleSubmit, setValue} = useForm();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
   const [clients, setClients] = useState<Client[]>([]);
   const [editingClient, setEditinClient] = useState<Client | null>(null);
+  const [user,setUser] = useState<any | null>(null);
+  
+  const [status, setStatus] = useState<AlertStatus>('loading');
+  const [message, setMessage] = useState('Carregando usuário');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadUser(){
+      await fetch('http://localhost:3001/v1/users/me',{
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('@cadastro_clientes')}`
+        }
+      })
+      .then(async (response) => {
+        const json = await response.json();
+
+        if(response.ok){
+          setUser(json.user);
+        }
+        else{
+          localStorage.removeItem('@cadastro_clientes');
+          navigate('/', {replace: true});
+        }
+      })
+      .catch((error) =>{
+        localStorage.removeItem('@cadastro_clientes');
+        navigate('/', {replace: true});
+      })
+      .finally(() =>{
+         setIsLoading(false);
+      })
+    }
+    loadUser();
+
+    return () => {
+      setUser(null);
+    }
+  }, [navigate]);
 
   function saveItem(data: any){
     const arrCopy = [...clients];
@@ -83,22 +129,36 @@ export default function Home() {
       <Header/>
 
       <Container maxW={"container.lg"}>
-        <Stack>
-          <SearchBar />
-
-          <Flex
-            justifyContent={"flex-end"}
-          >
-            <Button type={'submit'} variant="solid" colorScheme={"green"} onClick={onOpen}>
-              Adicionar
-            </Button>
-          </Flex>
-
-          <TableItem 
-            clients={clients}
-            onEditing={editItem}
-          />
-        </Stack>
+        {
+          isLoading ?
+          (
+            <Alerts
+              status={status}
+              message={message}
+            />
+          )
+          :
+          (
+            <Stack>
+              <Text>{user?.name || ''}</Text>
+    
+              <SearchBar />
+    
+              <Flex
+                justifyContent={"flex-end"}
+              >
+                <Button type={'submit'} variant="solid" colorScheme={"green"} onClick={onOpen}>
+                  Adicionar
+                </Button>
+              </Flex>
+    
+              <TableItem 
+                clients={clients}
+                onEditing={editItem}
+              />
+            </Stack>
+          )
+        }
 
         <Modal
           isOpen={isOpen}

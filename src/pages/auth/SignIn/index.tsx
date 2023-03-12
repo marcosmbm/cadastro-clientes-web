@@ -44,10 +44,12 @@ export default function SignIn() {
           navigate('/dashboard', { replace: true });
         }
         else {
+          setStatus('error')
           setMessage(json.message)
         }
       })
       .catch((error) => {
+        setStatus('error')
         setMessage(error);
       })
   }

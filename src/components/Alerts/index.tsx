@@ -15,7 +15,7 @@ interface titlesStatus{
     loading: string;
 }
 
-export default function Alerts({message, status, closeAlert = () => {}}: AlertsProps) {
+export default function Alerts({message, status, closeAlert}: AlertsProps) {
 
     function getTitle(status: string = 'Erro'): string{
         let obj: titlesStatus = {
@@ -23,7 +23,7 @@ export default function Alerts({message, status, closeAlert = () => {}}: AlertsP
             success: 'Sucesso',
             warning: 'Atenção',
             info: 'Informação',
-            loading: 'Carregando'
+            loading: 'Aguarde'
         }
 
         return obj[status as keyof titlesStatus];
@@ -37,13 +37,16 @@ export default function Alerts({message, status, closeAlert = () => {}}: AlertsP
         <AlertTitle>{title}: </AlertTitle>
         <AlertDescription>{message}</AlertDescription>
         
-        <CloseButton    
-            size='sm'     
-            position='absolute'
-            right={0}
-            top={0}
-            onClick={closeAlert}
-        />
+        {
+            closeAlert &&
+                <CloseButton    
+                    size='sm'     
+                    position='absolute'
+                    right={0}
+                    top={0}
+                    onClick={closeAlert}
+                />
+        }
     </Alert>
   );
 }
